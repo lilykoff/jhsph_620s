@@ -133,3 +133,20 @@ data %>%
   group_by(sex) %>%
   summarize(across(income, .fns = list(min = min, mean = mean, max = max))) %>%
   filter(age > 18)
+
+
+### problem set
+
+df = read_csv(here::here("data", "community_health_week2.csv"))
+
+df %>%
+  group_by(sex) %>%
+  summarize(q25 = quantile(diastolic_bp, 0.25, na.rm = TRUE),
+         q75 = quantile(diastolic_bp, 0.75, na.rm = TRUE))
+
+df %>%
+  group_by(site) %>%
+  filter(!is.na(smoking_status)) %>%
+  summarize(n = n(),
+            n_smokers = sum(smoking_status == "Current"),
+            prop_smokers = n_smokers/n)

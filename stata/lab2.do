@@ -28,7 +28,7 @@ replace work = "unemployable" if age < 1
 replace work = "can retire"   if age > 67
 replace work = "allowance"    if age >= 8 & age < 15
 replace work = "adulting"     if age > 22 
-replace work = "Auntie Annes" if age == .
+* replace work = "Auntie Annes" if age == .
 
 list age work 
 
@@ -61,7 +61,7 @@ display "Max live_birth: " r(max)
 
 list
 * add a flag variable
-gen high_risk = (age < 20 & parity >= 1) | (age > 35 & parity >= 5)
+gen high_risk = (age < 25 & live_birth != . & live_birth >= 1) | (age > 35 & live_birth >= 5)
 
 list age parity live_birth high_risk
 
@@ -104,13 +104,14 @@ gen valid2 = (test_a_s >= dx_date_s & !missing(test_a_s)) & ///
              (test_b_s >= dx_date_s & !missing(test_b_s)) | ///
              (!missing(test_a_s) & specimen == "tissue")
 
+list valid valid2 
 ******************************************************
 * 4. Subset data
 ******************************************************
 
 * keep only flag_north
 preserve
-keep if flag_north
+keep if !flag_north
 list
 restore
 
@@ -150,10 +151,13 @@ list
 summ age
 
 * group summary for age
-bysort sex: egen min_age = min(age)
-bysort sex: egen mean_age = mean(age)
-bysort sex: egen max_age = max(age)
-list sex min_age mean_age max_age
+collapse (min) min_age=age ///
+         (mean) mean_age=age ///
+         (max) max_age=age, by(sex)
+
+list
+
+* collapse 
 
 * add income
 gen income = .
