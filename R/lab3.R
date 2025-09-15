@@ -24,6 +24,13 @@ data = data %>%
 data %>%
   select(age, age2)
 
+data$age2 = ifelse(data$age <= 18, "Child",
+                   ifelse(data$age > 18 & data$age < 65, "Adult",
+                          ifelse(data$age >= 65, "Senior", NA)))
+
+data %>%
+  select(age, age2)
+
 data = data %>%
   mutate(country2 =
            case_when(country == 1 ~ "USA",
@@ -37,7 +44,6 @@ data %>%
   select(country, country2)
 
 
-# using base R
 data = data %>%
   mutate(country2 = ifelse(country == "USA", "USA",
                            ifelse(country == "2", "Canada",
@@ -118,9 +124,11 @@ age2
 
 sex = "Male"
 
-if(sex = "Male")
+if(sex = "Male") sex2 = M
 
-if(sex == Male) {sex2 = M}
+if(sex == Male) sex2 = M
+
+if(sex == "Male") sex2 = M
 
 race = "Latino"
 
